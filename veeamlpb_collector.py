@@ -31,7 +31,8 @@ def main():
             print "Session:",sessionInfo.ToString()
 
     html = xml.Element("html")
-    body = xml.SubElement(html, "body", {"style":"background-color: #78DDAA;"})
+    #body = xml.SubElement(html, "body", {"style":"background-color: #00e296;"})
+    body = xml.SubElement(html, "body", {"style":"background-color: #00b336;"})
 
     xml.SubElement(body,"h1").text = "Report at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     xml.SubElement(body,"h2").text = "Statistic:"
@@ -54,11 +55,12 @@ def main():
         latestSessionInfo = sessionList.List()[-1]
         attr = {}
         if latestSessionInfo.State() == "Success":
-            attr["style"] = "background-color: green;"
+            #attr["style"] = "background-color: #00b336;"
+            attr["style"] = "background-color: #005f4b; color: white;"
         elif latestSessionInfo.State() == "Warning":
-            attr["style"] = "background-color: yellow;"
+            attr["style"] = "background-color: #93ea20;"
         else:          
-            attr["style"] = "background-color: red;"
+            attr["style"] = "background-color: #ba0200; color: white;"
                     
         xml.SubElement(xml.SubElement(body,"p"),"span", attr).text = \
             host + " - "+str(success)+"/"+str(warning)+"/"+str(error)+" Success/Warning/Error"
@@ -94,9 +96,9 @@ def main():
             if sessionInfo.State() == "Success":
                 pass
             elif sessionInfo.State() == "Warning":
-                attr["style"] ="background-color: yellow;"
+                attr["style"] ="background-color: #93ea20;"
             else:  
-                attr["style"] ="background-color: red;" 
+                attr["style"] ="background-color: #ba0200; color: white;" 
             xml.SubElement(tr, "td", attr).text = sessionInfo.State()
             
             xml.SubElement(tr, "td").text = sessionInfo.JobName()

@@ -90,7 +90,7 @@ def SendMailsessions():
 
     text += "\n"
     text += "--------------------------------------------------------------------------------\n"
-    text += "  Yours sincerely, Veeam Agent Linux monitor\n"
+    text += "  Yours sincerely, Veeam Agent for Linux Monitor\n"
 
     print text
     os.system("echo '"+text+"' | mail -s '"+subject+"' "+recipient)

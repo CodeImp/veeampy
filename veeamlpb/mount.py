@@ -1,4 +1,7 @@
-﻿from subproccall import *
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from subproccall import *
 from veeamlpb import session
 
 class CBackup:

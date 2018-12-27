@@ -60,7 +60,6 @@ def SendMailsessions():
 
     sessions = veeamlpb.session.CSessionInfoList.Get()
 
-    #recipient = "Sergey.Shtepa@veeam.com"
     recipient = "dear.admin@company.com"
     subject = "VAL status notification"
     text = "Statistic:\n"
@@ -73,7 +72,7 @@ def SendMailsessions():
     for sessionInfo in sessions.List():
         if (sessionInfo.State() == "Success"):
             successCount += 1
-        elif (sessionInfo.status == "Warning"):
+        elif (sessionInfo.State() == "Warning"):
             warningCount += 1
         else:
             errorCount += 1
@@ -94,7 +93,7 @@ def SendMailsessions():
     text += "  Yours sincerely, Veeam Agent Linux monitor\n"
 
     print text
-    #os.system("echo '"+text+"' | mail -s '"+subject+"' "+recipient)
+    os.system("echo '"+text+"' | mail -s '"+subject+"' "+recipient)
 
 
 def main():

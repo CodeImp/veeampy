@@ -30,20 +30,19 @@ def main():
         for sessionInfo in sessionList.List():
             print "Session:",sessionInfo.ToString()
 
-    #for host in hosts:
     html = xml.Element("html")
-    body = xml.SubElement(html, "body")
+    body = xml.SubElement(html, "body", {"style":"background-color: #78DDAA;"})
 
-
-    xml.SubElement(body,"p").text = ""
-
-    xml.SubElement(body,"p").text = "Report at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    xml.SubElement(body,"p").text = "Statistic:"
+    xml.SubElement(body,"h1").text = "Report at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    xml.SubElement(body,"h2").text = "Statistic:"
     for host in hosts:
         sessionList = backupSessionMap[host]
         success=0
         warning=0
         error=0
+        if len(sessionList.List()) == 0:
+            continue
+        
         for sessionInfo in sessionList.List():
             if sessionInfo.State() == "Success":
                 success +=1
@@ -52,20 +51,58 @@ def main():
             else:
                 error +=1
 
-        xml.SubElement(body,"p").text = host + " - "+str(success)+"/"+str(warning)+"/"+str(error)+" Success/Warning/Error"
-    xml.SubElement(body,"p").text = ""
+        latestSessionInfo = sessionList.List()[-1]
+        attr = {}
+        if latestSessionInfo.State() == "Success":
+            attr["style"] = "background-color: green;"
+        elif latestSessionInfo.State() == "Warning":
+            attr["style"] = "background-color: yellow;"
+        else:          
+            attr["style"] = "background-color: red;"
+                    
+        xml.SubElement(xml.SubElement(body,"p"),"span", attr).text = \
+            host + " - "+str(success)+"/"+str(warning)+"/"+str(error)+" Success/Warning/Error"
 
+            
     for host in hosts:
         sessionList = backupSessionMap[host]
         
-        xml.SubElement(body,"p").text = "Last 10 session for host "+host
-        inx = 0        
+        xml.SubElement(body,"h2").text = host+":"
+
+        tableStyle =xml.SubElement(body,"style")
+        tableStyle.attrib["type"] = "text/css"
+        tableStyle.text = "TABLE {border: 1px solid green;} TD{ border: 1px solid green; padding: 4px;}" 
+        
+        table = xml.SubElement(body,"table")
+        thead = xml.SubElement(table, "thead")
+        xml.SubElement(thead, "th").text = "Number"
+        xml.SubElement(thead, "th").text = "State"
+        xml.SubElement(thead, "th").text = "Job name"
+        xml.SubElement(thead, "th").text = "Start at"
+        xml.SubElement(thead, "th").text = "Complete at"
+        
+        tbody = xml.SubElement(table, "tbody")
+        inx = 0
         for sessionInfo in reversed(sessionList.List()):
             if inx == 10:
-                xml.SubElement(body,"p").text = "..."
+                #xml.SubElement(body,"p").text = "..."
                 break;
+            tr = xml.SubElement(tbody,"tr")
+            xml.SubElement(tr, "td").text = str(inx)
 
-            xml.SubElement(body,"p").text = str(inx)+" | "+sessionInfo.State()+" | "+sessionInfo.JobName()+" | "+sessionInfo.StartTime()+" / "+sessionInfo.FinishTime()
+            attr ={}
+            if sessionInfo.State() == "Success":
+                pass
+            elif sessionInfo.State() == "Warning":
+                attr["style"] ="background-color: yellow;"
+            else:  
+                attr["style"] ="background-color: red;" 
+            xml.SubElement(tr, "td", attr).text = sessionInfo.State()
+            
+            xml.SubElement(tr, "td").text = sessionInfo.JobName()
+            xml.SubElement(tr, "td").text = sessionInfo.StartTime()
+            xml.SubElement(tr, "td").text = sessionInfo.FinishTime()
+
             inx += 1
 
     xml.ElementTree(html).write("summary.html", encoding='utf-8', method='html')

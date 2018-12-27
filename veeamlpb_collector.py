@@ -31,7 +31,6 @@ def main():
             print "Session:",sessionInfo.ToString()
 
     html = xml.Element("html")
-    #body = xml.SubElement(html, "body", {"style":"background-color: #00e296;"})
     body = xml.SubElement(html, "body", {"style":"background-color: #00b336;"})
 
     xml.SubElement(body,"h1").text = "Report at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -55,7 +54,6 @@ def main():
         latestSessionInfo = sessionList.List()[-1]
         attr = {}
         if latestSessionInfo.State() == "Success":
-            #attr["style"] = "background-color: #00b336;"
             attr["style"] = "background-color: #005f4b; color: white;"
         elif latestSessionInfo.State() == "Warning":
             attr["style"] = "background-color: #93ea20;"
@@ -87,7 +85,6 @@ def main():
         inx = 0
         for sessionInfo in reversed(sessionList.List()):
             if inx == 10:
-                #xml.SubElement(body,"p").text = "..."
                 break;
             tr = xml.SubElement(tbody,"tr")
             xml.SubElement(tr, "td").text = str(inx)

@@ -50,7 +50,7 @@ def SendXmlsessions():
     sessionsXmlFile.close()
 
     hostname = os.uname()[1]
-    target = "user@deb-iscsi-test:/home/user"
+    target = "admin@admins-host:/home/admin"
     os.system("scp ./"+sessionsFileName+" "+target+"/backups/"+hostname+"/session_list.xml")
 
 
@@ -85,7 +85,7 @@ def SendMailsessions():
             break;
 
         text += str(inx)+" | "+sessionInfo.State()+" | "+sessionInfo.JobName()+" | "+sessionInfo.StartTime()+" / "+sessionInfo.FinishTime() + "\n"
-        #text += 
+
         inx += 1
 
     text += "\n"
